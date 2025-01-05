@@ -3,7 +3,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export default function Header() {
     return (
-        <header className="sticky top-0 z-50 bg-background border-b shadow-sm">
+        <header className="sticky top-0 z-50 bg-background/90 border-b shadow-sm">
             <nav className="container mx-auto px-6 py-3">
                 <ul className="flex justify-between items-center">
                     <li>
