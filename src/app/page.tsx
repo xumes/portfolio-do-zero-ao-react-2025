@@ -17,10 +17,10 @@ export default function Home() {
               <h2 className="text-2xl font-semibold">Ver Portfólio</h2>
               <p className="mt-4 text-xl">Explore os projetos e trabalhos realizados.</p>
             </Link>
-            <div className="p-6 mt-6 text-left border rounded-xl hover:text-blue-600 focus:text-blue-600">
+            <Link href="/admin" className="p-6 mt-6 text-left border rounded-xl hover:text-blue-600 focus:text-blue-600">
               <h2 className="text-2xl font-semibold">Área Administrativa</h2>
               <p className="mt-4 text-xl">Gerencie seu portfólio (requer login).</p>
-            </div>
+            </Link>
           </div>
         </main>
       </div>
