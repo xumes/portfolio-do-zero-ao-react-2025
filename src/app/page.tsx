@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Header from "./components/Header";
 
 export default function Home() {
@@ -11,10 +12,10 @@ export default function Home() {
             Comece a construir o seu portfólio profissional hoje!
           </p>
           <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
-            <div className="p-6 mt-6 text-left border rounded-xl hover:text-blue-600 focus:text-blue-600">
+            <Link href="/portfolio" className="p-6 mt-6 text-left border rounded-xl hover:text-blue-600 focus:text-blue-600">
               <h2 className="text-2xl font-semibold">Ver Portfólio</h2>
               <p className="mt-4 text-xl">Explore os projetos e trabalhos realizados.</p>
-            </div>
+            </Link>
             <div className="p-6 mt-6 text-left border rounded-xl hover:text-blue-600 focus:text-blue-600">
               <h2 className="text-2xl font-semibold">Área Administrativa</h2>
               <p className="mt-4 text-xl">Gerencie seu portfólio (requer login).</p>
