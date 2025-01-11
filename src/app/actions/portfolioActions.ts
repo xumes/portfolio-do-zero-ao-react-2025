@@ -13,7 +13,7 @@ type AddPortfolioInput = {
 
 export async function addPortfolioItem(data: AddPortfolioInput) {
     try {
-        const portfolioItem = prisma.portfolioItem.create({
+        const portfolioItem = await prisma.portfolioItem.create({
             data: {
                 title: data.title,
                 description: data.description,
@@ -25,7 +25,7 @@ export async function addPortfolioItem(data: AddPortfolioInput) {
         })
 
         return {
-            sucess: true, data: portfolioItem
+            success: true, data: portfolioItem
         }
     }
     catch (error) {

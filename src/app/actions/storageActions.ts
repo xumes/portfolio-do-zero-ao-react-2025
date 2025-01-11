@@ -21,6 +21,7 @@ export async function uploadImage(file: File) {
             .upload(filePath, file)
 
         if (uploadError) {
+            console.error("UPLOAD ERROR", uploadError)
             throw new Error("Erro ao fazer upload")
         }
 

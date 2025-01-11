@@ -18,6 +18,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
+import { toast } from "@/hooks/use-toast";
+import { uploadImage } from "../actions/storageActions";
+import { addPortfolioItem } from "../actions/portfolioActions";
+import { useRouter } from "next/navigation";
 
 const MAX_FILE_SIZE = 5000000 // 5MB
 
@@ -43,6 +47,7 @@ const formSchema = z.object({
 })
 
 export default function PorftolioForm() {
+  const router = useRouter()
   const [previewImage, setPreviewImage] = useState<string | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,8 +74,51 @@ export default function PorftolioForm() {
     reader.readAsDataURL(file)
   }
 
-  const handleFormSubmit = (value: z.infer<typeof formSchema>) => {
-    console.log("Formulario enviado", value)
+  const handleFormSubmit = async (value: z.infer<typeof formSchema>) => {
+    try {
+      const file = value.image[0]
+
+      // Upload da Imagem usando Server Action
+      const { success: uploadImageSuccess, data: image, error: uploadError } = await uploadImage(file)
+      if (!uploadImageSuccess) {
+        throw new Error(uploadError)
+      }
+
+      const imageUrl = image?.publicUrl ? image.publicUrl : ""
+      console.log("Url da Imagem no Supabase storage", imageUrl)
+
+      // Salvar no banco de dados usando Server Action
+      const {success, data, error} = await addPortfolioItem({
+        title: value.title,
+        description: value.description,
+        imageUrl: imageUrl,
+        tags: value.tags.split(",").map(tag => tag.trim()),
+        projectUrl: value.projectUrl,
+        githubUrl: value.githubUrl
+      })
+
+      if (!success) {
+        throw new Error(error)
+      }
+
+      console.log("Dados inseridos no banco de dados:", data)
+
+      toast({
+        title: "Projeto adicionado com sucesso!",
+        description: "Seu novo projeto foi adicionado ao portfólio",
+        variant: "default"
+      })
+
+      router.push("/admin")
+
+    } catch (error) {
+      console.error("FormOnSubmit: Erro ao adicionar projeto", error)
+      toast({
+        title: "Erro ao adicionar um projeto",
+        description: "Ocorreu um erro ao adicionar o projeto. Por favor, tente novamente",
+        variant: "destructive"
+      })
+    }
   }
 
   return (
@@ -111,6 +159,7 @@ export default function PorftolioForm() {
         <FormField
           control={form.control}
           name="image"
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           render={({field: {onChange, value, ...rest}}) => (
             <FormItem>
               <FormLabel>URL da Imagem</FormLabel>
