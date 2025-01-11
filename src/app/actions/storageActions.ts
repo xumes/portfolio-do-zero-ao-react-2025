@@ -9,6 +9,9 @@ export async function uploadImage(file: File) {
     try {
         const supabase = createClient()
 
+        // verifica se o bucket já existe ou cria caso não exista ainda
+        createBucketIfNotExist()
+
         const fileExtension = file.name.split(".").pop()
         const fileName = `${cuid()}.${fileExtension}`
         const filePath = `portfolio/${fileName}`
@@ -41,4 +44,27 @@ export async function uploadImage(file: File) {
             error: "Falha ao fazer upload da imagem"
         }
     }
+}
+
+async function createBucketIfNotExist(): Promise<void> {
+    const supabase = createClient()
+
+    const {data: buckets, error: bucketError} = await supabase.storage.listBuckets()
+    if (bucketError) {
+        throw new Error("Erro ao listar os buckets", bucketError)
+    }
+
+    const bucketExists = buckets.some(bucket => bucket.name === BUCKET_NAME)
+
+    if (bucketExists) return 
+
+    const {error} = await supabase.storage.createBucket(BUCKET_NAME, {
+        public: true
+    })
+
+    if (error) {
+        throw new Error("Erro ao criar o bucket", error)
+    }
+
+    return
 }
