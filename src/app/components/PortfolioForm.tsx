@@ -111,14 +111,19 @@ export default function PorftolioForm() {
         <FormField
           control={form.control}
           name="image"
-          render={() => (
+          render={({field: {onChange, value, ...rest}}) => (
             <FormItem>
               <FormLabel>URL da Imagem</FormLabel>
               <FormControl>
                 <Input 
                   type="file"
                   accept="image/*"
-                  onChange={handleImageUpload}
+                  multiple={false}
+                  onChange={(e) => {
+                    onChange(e.target.files)
+                    handleImageUpload(e)
+                  }}
+                  {...rest}
                 />
               </FormControl>
               <FormDescription>
